@@ -1,5 +1,5 @@
 from fastapi import FastAPI 
-from routes.routs import router 
+from api.v1.routes.video_routs import router 
 import uvicorn 
 
 
