@@ -4,7 +4,7 @@ from typing import Optional
 from uuid import UUID
 
 #my modules
-from schemas.user_auth import TokenResponse
+from api.v1.schemas.user_auth import TokenResponse
 import core.secure as secure
 from api.v1.database.session import get_db
 from api.v1.database.models.user import UserTable 

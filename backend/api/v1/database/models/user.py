@@ -1,18 +1,26 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import String, Integer, Float, DateTime, Boolean
 
-from datetime import datetime 
+from uuid import uuid4
+import uuid as uuid_pkg 
+from sqlalchemy.dialects.postgresql import UUID
+
+
+from datetime import datetime, timezone
 
 from api.v1.database.session import Base 
-import uuid
 
 
 
 class UserTable(Base):
-    id : Mapped[uuid.UUID] = mapped_column(uuid.UUID(as_uuid=True),
-                                           primary_key=True,
-                                           index=True, 
-                                           default=uuid.uuid4)
+    
+    __tablename__ = "users"          
+
+    id: Mapped[uuid_pkg.UUID] = mapped_column(
+                    UUID(as_uuid=True),   
+                    primary_key=True,
+                    default=uuid4
+    )
     
     username : Mapped[str] = mapped_column(String(50),   
                                            unique=True, 
@@ -28,7 +36,7 @@ class UserTable(Base):
 
 
     created_at : Mapped[datetime] = mapped_column(DateTime,
-                                                  default=datetime.now(datetime.UTC), 
+                                                  default = datetime.utcnow, 
                                                   nullable=False)
     
 

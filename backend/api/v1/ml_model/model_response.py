@@ -4,8 +4,8 @@ import asyncio
 
 
 
-#model = YOLO('yolov8n.pt')
-model : any #while testing 
+model = YOLO('yolov8n.pt')
+#model : any #while testing 
 
 async def predict(filename : str):
 

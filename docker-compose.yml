@@ -1,0 +1,35 @@
+services:
+  database:
+    image: postgres:15
+    container_name: cv_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: Pablo
+      POSTGRES_PASSWORD: 1248
+      POSTGRES_DB: my_DB
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:  # Проверка готовности базы данных
+      test: ["CMD", "pg_isready", "-U", "Pablo", "-d", "my_DB"]
+      interval: 5s
+      retries: 5
+
+#backend
+  backend:
+    build: backend/
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy  # Дождаться готовности БД
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    volumes:
+      # Монтируем папку с кодом бэкенда (где лежит main.py) в /backend
+      - ./backend:/backend
+
+
+volumes:
+  postgres_data:

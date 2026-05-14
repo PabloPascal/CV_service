@@ -1,8 +1,7 @@
 
 
-
-class Config:
-    DATABASE_URL: str = "postgresql+asyncpg://user:fake_password@localhost:5432/dbname"
+class Settings:
+    DATABASE_URL: str = "postgresql+asyncpg://Pablo:1248@database:5432/my_DB"
     SECRET_KEY: str = "change-me-in-production"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
@@ -15,5 +14,5 @@ class Config:
 
 
 
-settings = Config()
+settings = Settings()
 
