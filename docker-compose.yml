@@ -7,11 +7,16 @@ services:
       POSTGRES_USER: Pablo
       POSTGRES_PASSWORD: 1248
       POSTGRES_DB: my_DB
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_INPUT: input-videos
+      MINIO_BUCKET_OUTPUT: output-videos 
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:  # Проверка готовности базы данных
+    healthcheck:  
       test: ["CMD", "pg_isready", "-U", "Pablo", "-d", "my_DB"]
       interval: 5s
       retries: 5
@@ -23,7 +28,7 @@ services:
       - "8080:8080"
     depends_on:
       database:
-        condition: service_healthy  # Дождаться готовности БД
+        condition: service_healthy  
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     volumes:
@@ -31,5 +36,27 @@ services:
       - ./backend:/backend
 
 
+  minio:
+      image: minio/minio:latest
+      container_name: cv_minio
+      ports:
+        - "9000:9000"   # API
+        - "9001:9001"   # Web console
+      environment:
+        MINIO_ROOT_USER: minioadmin
+        MINIO_ROOT_PASSWORD: minioadmin
+      volumes:
+        - minio_data:/data
+      command: server /data --console-address ":9001"
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+        interval: 5s
+        retries: 5
+
+
+
 volumes:
   postgres_data:
+  minio_data:
+
+

@@ -8,6 +8,7 @@ from api.v1.schemas.user_auth import TokenResponse
 import core.secure as secure
 from api.v1.database.session import get_db
 from api.v1.database.models.user import UserTable 
+from services.storage import storage_service, Storage
 
 #fast api moduless
 from fastapi import Depends, HTTPException
@@ -16,6 +17,9 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, APIKeyCoo
 #alchemy modules
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+
+
+
 
 bearer_scheme = HTTPBearer(auto_error=False)
 cookie_scheme = APIKeyCookie(name="access_token", auto_error=False)
@@ -57,7 +61,8 @@ async def get_current_user(
 
 
 
-
+async def get_storage()->Storage:
+    return storage_service
 
 
 
